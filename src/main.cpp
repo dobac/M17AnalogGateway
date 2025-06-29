@@ -2282,7 +2282,7 @@ esp_interface_t check_protocol()
 		Serial.println("Interface is ESP_IF_WIFI_AP");
 	else
 		Serial.println("Unknown interface!!");
-	current_wifi_interface = current_esp_interface;
+	current_wifi_interface = (wifi_interface_t)current_esp_interface;
 	if (current_wifi_interface == WIFI_IF_STA)
 		Serial.println("Interface is WIFI_IF_STA");
 	else if (current_wifi_interface == WIFI_IF_AP)
@@ -2355,7 +2355,7 @@ void taskNetwork(void *pvParameters)
 	if (config.wifi_protocol != 1 && config.wifi_protocol != 3 && config.wifi_protocol != 7)
 		config.wifi_protocol = 7;
 	tcpip_adapter_get_esp_if(&current_esp_interface);
-	current_wifi_interface = current_esp_interface;
+	current_wifi_interface = (wifi_interface_t)current_esp_interface;
 	esp_wifi_set_protocol(current_wifi_interface, config.wifi_protocol);
 	esp_err_t error_code = esp_wifi_get_protocol(current_wifi_interface, &current_protocol);
 	// esp_err_to_name_r(error_code,error_buf1,100);

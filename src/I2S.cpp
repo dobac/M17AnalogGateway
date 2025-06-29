@@ -8,6 +8,9 @@ extern "C"
 #include "soc/syscon_struct.h"
 }
 
+#define RTC_MODULE_TAG "RTC"
+#include "driver/i2s.h"
+
 #define ADC_PATT_LEN_MAX (16)
 #define ADC_CHECK_UNIT(unit) RTC_MODULE_CHECK(adc_unit < ADC_UNIT_2, "ADC unit error, only support ADC1 for now", ESP_ERR_INVALID_ARG)
 #define RTC_MODULE_CHECK(a, str, ret_val)                                             \
@@ -129,12 +132,15 @@ void I2S_Init(i2s_mode_t MODE, i2s_bits_per_sample_t BPS)
 
 int I2S_Read(char *data, int numData)
 {
-  return i2s_read_bytes(I2S_NUM_0, (char *)data, numData, portMAX_DELAY);
+    size_t bytes_read = 0;
+    i2s_read(I2S_NUM_0, (void*)data, numData, &bytes_read, portMAX_DELAY);
+    return (int)bytes_read;
 }
 
 void I2S_Write(char *data, int numData)
 {
-  i2s_write_bytes(I2S_NUM_0, (const char *)data, numData, portMAX_DELAY);
+    size_t bytes_written = 0;
+    i2s_write(I2S_NUM_0, (const void*)data, numData, &bytes_written, portMAX_DELAY);
 }
 
 void MakeSampleStereo16(int16_t sample[2],char channels,char bps) {
